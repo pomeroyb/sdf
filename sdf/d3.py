@@ -120,11 +120,7 @@ def slab(x0=None, y0=None, z0=None, x1=None, y1=None, z1=None, k=None):
 
 @sdf3
 def box(size=1, center=ORIGIN):
-    size = np.array(size) / 2
-    def f(p):
-        q = np.abs(p - center) - size
-        return _length(_max(q, 0)) + _min(np.amax(q, axis=1), 0)
-    return f
+    return rounded_box(size, 0, center)
 
 @sdf3
 def aabb(a, b):
@@ -135,10 +131,10 @@ def aabb(a, b):
     return box(size).translate(offset)
 
 @sdf3
-def rounded_box(size, radius):
+def rounded_box(size=1, radius=0.1, center=ORIGIN):
     size = np.array(size) / 2 - radius
     def f(p):
-        q = np.abs(p) - size
+        q = np.abs(p - center) - size
         return _length(_max(q, 0)) + _min(np.amax(q, axis=1), 0) - radius
     return f
 
